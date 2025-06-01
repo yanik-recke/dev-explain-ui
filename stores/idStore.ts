@@ -8,5 +8,8 @@ interface IdStore {
 
 export const useIdStore = create<IdStore>((set) => ({
   id: null,
-  setId: (id) => set({ id }),
+  setId: (id) => {
+    console.log("set id");
+    set({ id });
+  },
 }));

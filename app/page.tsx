@@ -15,11 +15,14 @@ import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useIdStore } from "@/stores/idStore";
+import { useCommitStore } from "@/stores/commitStore";
+import { Commit } from "@/stores/commitStore";
 
 interface SelectionOption {
   id: string;
   name: string;
   value: string;
+  commits: Commit[];
 }
 
 export default function SelectionView() {
@@ -34,6 +37,7 @@ export default function SelectionView() {
   const [urlError, setUrlError] = useState("");
   const [dropdownError, setDropdownError] = useState("");
   const { setId, id } = useIdStore();
+  const { setCommits, commits } = useCommitStore();
 
   const loadOptions = async () => {
     if (hasLoadedOptions) return;
@@ -61,12 +65,14 @@ export default function SelectionView() {
       .then((res) => {
         if (res.status === 200) {
           setId(res.data.id);
+
           return true;
         } else {
           return false;
         }
       })
       .catch((err) => {
+        console.error(err);
         return false;
       });
   };
@@ -118,6 +124,7 @@ export default function SelectionView() {
           setDropdownError("The selected project is not available");
         } else {
           setId(option.id);
+          setCommits([...option.commits]);
           // Navigate to chat view with dropdown selection parameter
           router.push(
             `/chat?selection=${encodeURIComponent(selectionName)}&type=dropdown`

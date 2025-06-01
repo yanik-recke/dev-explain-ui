@@ -15,6 +15,7 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import axios from "axios";
+import { Commit, useCommitStore } from "@/stores/commitStore";
 
 interface Message {
   id: string;
@@ -38,9 +39,9 @@ export default function ChatView() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [listItems, setListItems] = useState<ListItem[]>([]);
+  const [listItems, setListItems] = useState<Commit[]>([]);
   const [isLoadingSidebar, setIsLoadingSidebar] = useState(true);
-
+  const { commits } = useCommitStore();
   const { id } = useIdStore();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -67,105 +68,121 @@ export default function ChatView() {
       setIsLoadingSidebar(true);
       try {
         // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        const mockItems = [
-          {
-            id: "1",
-            name: "Data Analysis",
-            description: "Comprehensive data analysis tools and insights",
-          },
-          {
-            id: "2",
-            name: "Performance Metrics",
-            description: "Real-time performance monitoring and analytics",
-          },
-          {
-            id: "3",
-            name: "User Behavior",
-            description: "Track and analyze user interactions and patterns",
-          },
-          {
-            id: "4",
-            name: "Security Scan",
-            description:
-              "Automated security vulnerability assessment and reporting",
-          },
-          {
-            id: "5",
-            name: "SEO Optimization",
-            description:
-              "Search engine optimization recommendations and analysis",
-          },
-          {
-            id: "6",
-            name: "Accessibility Check",
-            description: "Web accessibility compliance testing and validation",
-          },
-          {
-            id: "7",
-            name: "Code Quality",
-            description: "Static code analysis and quality metrics evaluation",
-          },
-          {
-            id: "8",
-            name: "Load Testing",
-            description: "Performance testing under various load conditions",
-          },
-          {
-            id: "9",
-            name: "API Documentation",
-            description:
-              "Automated API documentation generation and validation",
-          },
-          {
-            id: "10",
-            name: "Database Optimization",
-            description: "Query optimization and database performance tuning",
-          },
-          {
-            id: "11",
-            name: "Content Analysis",
-            description:
-              "Content quality assessment and improvement suggestions",
-          },
-          {
-            id: "12",
-            name: "Mobile Responsiveness",
-            description:
-              "Mobile device compatibility and responsive design testing",
-          },
-          {
-            id: "13",
-            name: "Browser Compatibility",
-            description: "Cross-browser compatibility testing and validation",
-          },
-          {
-            id: "14",
-            name: "Error Monitoring",
-            description: "Real-time error tracking and monitoring system",
-          },
-          {
-            id: "15",
-            name: "Cache Optimization",
-            description: "Caching strategy optimization for better performance",
-          },
-          {
-            id: "16",
-            name: "Image Optimization",
-            description: "Image compression and format optimization tools",
-          },
-          {
-            id: "17",
-            name: "Font Analysis",
-            description: "Typography and font loading performance analysis",
-          },
-          {
-            id: "18",
-            name: "Third-party Scripts",
-            description: "External script impact analysis and optimization",
-          },
-        ];
-        setListItems(mockItems);
+        // const mockItems = [
+        //   {
+        //     id: "1",
+        //     name: "Data Analysis",
+        //     description: "Comprehensive data analysis tools and insights",
+        //   },
+        //   {
+        //     id: "2",
+        //     name: "Performance Metrics",
+        //     description: "Real-time performance monitoring and analytics",
+        //   },
+        //   {
+        //     id: "3",
+        //     name: "User Behavior",
+        //     description: "Track and analyze user interactions and patterns",
+        //   },
+        //   {
+        //     id: "4",
+        //     name: "Security Scan",
+        //     description:
+        //       "Automated security vulnerability assessment and reporting",
+        //   },
+        //   {
+        //     id: "5",
+        //     name: "SEO Optimization",
+        //     description:
+        //       "Search engine optimization recommendations and analysis",
+        //   },
+        //   {
+        //     id: "6",
+        //     name: "Accessibility Check",
+        //     description: "Web accessibility compliance testing and validation",
+        //   },
+        //   {
+        //     id: "7",
+        //     name: "Code Quality",
+        //     description: "Static code analysis and quality metrics evaluation",
+        //   },
+        //   {
+        //     id: "8",
+        //     name: "Load Testing",
+        //     description: "Performance testing under various load conditions",
+        //   },
+        //   {
+        //     id: "9",
+        //     name: "API Documentation",
+        //     description:
+        //       "Automated API documentation generation and validation",
+        //   },
+        //   {
+        //     id: "10",
+        //     name: "Database Optimization",
+        //     description: "Query optimization and database performance tuning",
+        //   },
+        //   {
+        //     id: "11",
+        //     name: "Content Analysis",
+        //     description:
+        //       "Content quality assessment and improvement suggestions",
+        //   },
+        //   {
+        //     id: "12",
+        //     name: "Mobile Responsiveness",
+        //     description:
+        //       "Mobile device compatibility and responsive design testing",
+        //   },
+        //   {
+        //     id: "13",
+        //     name: "Browser Compatibility",
+        //     description: "Cross-browser compatibility testing and validation",
+        //   },
+        //   {
+        //     id: "14",
+        //     name: "Error Monitoring",
+        //     description: "Real-time error tracking and monitoring system",
+        //   },
+        //   {
+        //     id: "15",
+        //     name: "Cache Optimization",
+        //     description: "Caching strategy optimization for better performance",
+        //   },
+        //   {
+        //     id: "16",
+        //     name: "Image Optimization",
+        //     description: "Image compression and format optimization tools",
+        //   },
+        //   {
+        //     id: "17",
+        //     name: "Font Analysis",
+        //     description: "Typography and font loading performance analysis",
+        //   },
+        //   {
+        //     id: "18",
+        //     name: "Third-party Scripts",
+        //     description: "External script impact analysis and optimization",
+        //   },
+        // ];
+        if (commits !== null) {
+          setListItems(commits);
+        } else {
+          console.log("Was not able to set sidebar items, commit were null");
+          await axios
+            .get("http://localhost:3001/api/repos/repos")
+            .then((res) => {
+              if (res.status === 200) {
+                console.log(res.data);
+                let repository = res.data.find((repo) => repo.id === id);
+
+                setListItems(repository.commits);
+              }
+            })
+            .catch((ex) => {
+              console.error("Failed to load options:", ex);
+            });
+        }
       } catch (error) {
         console.error("Failed to load sidebar items:", error);
       } finally {
@@ -276,14 +293,14 @@ export default function ChatView() {
                   <div className="space-y-2 p-4">
                     {listItems.map((item) => (
                       <Card
-                        key={item.id}
+                        key={item.sha.substring(0, 6)}
                         className="p-3 hover:bg-gray-50 transition-colors cursor-pointer border-gray-200"
                       >
                         <h3 className="text-sm font-medium text-gray-900 mb-1">
-                          {item.name}
+                          Commit: {item.sha.substring(0, 10)}
                         </h3>
                         <p className="text-xs text-gray-600 leading-relaxed">
-                          {item.description}
+                          {item.message.substring(0, 20)}
                         </p>
                       </Card>
                     ))}
