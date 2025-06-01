@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useIdStore } from "@/stores/idStore";
 
 interface SelectionOption {
   id: string;
@@ -31,36 +33,42 @@ export default function SelectionView() {
   const [isSubmittingDropdown, setIsSubmittingDropdown] = useState(false);
   const [urlError, setUrlError] = useState("");
   const [dropdownError, setDropdownError] = useState("");
+  const { setId, id } = useIdStore();
 
   const loadOptions = async () => {
     if (hasLoadedOptions) return;
 
     setIsLoadingOptions(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const mockOptions = [
-        { id: "1", name: "Project Alpha", value: "alpha" },
-        { id: "2", name: "Project Beta", value: "beta" },
-        { id: "3", name: "Project Gamma", value: "gamma" },
-        { id: "4", name: "Project Delta", value: "delta" },
-      ];
-      setOptions(mockOptions);
-      setHasLoadedOptions(true);
-    } catch (error) {
-      console.error("Failed to load options:", error);
-    } finally {
-      setIsLoadingOptions(false);
-    }
+    await axios
+      .get("http://localhost:3001/api/repos/repos")
+      .then((res) => {
+        if (res.status === 200) {
+          setOptions(res.data);
+          console.log(res.data);
+          setHasLoadedOptions(true);
+        }
+      })
+      .catch((ex) => {
+        console.error("Failed to load options:", ex);
+      });
+
+    setIsLoadingOptions(false);
   };
 
   const validateUrl = async (urlToValidate: string): Promise<boolean> => {
-    // Simulate API validation with random success/failure
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Simulate 70% success rate
-    const isValid = Math.random() > 0.3;
-    return isValid;
+    return await axios
+      .post("http://localhost:3001/api/repos/repo", { url: urlToValidate })
+      .then((res) => {
+        if (res.status === 200) {
+          setId(res.data.id);
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((err) => {
+        return false;
+      });
   };
 
   const validateProject = async (projectValue: string): Promise<boolean> => {
@@ -74,7 +82,6 @@ export default function SelectionView() {
 
   const handleUrlSubmit = async () => {
     if (!url.trim()) return;
-
     setIsSubmittingUrl(true);
     setUrlError("");
 
@@ -106,10 +113,16 @@ export default function SelectionView() {
       if (isValid) {
         const option = options.find((opt) => opt.value === selectedOption);
         const selectionName = option?.name || selectedOption;
-        // Navigate to chat view with dropdown selection parameter
-        router.push(
-          `/chat?selection=${encodeURIComponent(selectionName)}&type=dropdown`
-        );
+
+        if (!option) {
+          setDropdownError("The selected project is not available");
+        } else {
+          setId(option.id);
+          // Navigate to chat view with dropdown selection parameter
+          router.push(
+            `/chat?selection=${encodeURIComponent(selectionName)}&type=dropdown`
+          );
+        }
       } else {
         setDropdownError("The selected project is not available");
       }
@@ -127,7 +140,9 @@ export default function SelectionView() {
           <h1 className="text-3xl font-semibold text-gray-900 mb-2">
             Get Started
           </h1>
-          <p className="text-gray-600">Choose how you'd like to proceed</p>
+          <p className="text-gray-600">
+            Provide a new repository or choose an existing one
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -187,11 +202,11 @@ export default function SelectionView() {
                 <List className="h-5 w-5 text-green-600" />
               </div>
               <h2 className="text-lg font-medium text-gray-900">
-                Select Project
+                Select Repository
               </h2>
             </div>
             <p className="text-gray-600 mb-4 text-sm">
-              Choose from your existing projects
+              Choose from your existing repositories
             </p>
             <div className="space-y-3">
               <Select
