@@ -22,22 +22,22 @@ Before you begin, ensure you have the following installed:
 
 ### 1. Clone the Repository
 
-\`\`\`bash
+```bash
 git clone <your-repository-url>
 cd github-inspired-webapp
-\`\`\`
+```
 
 ### 2. Install Dependencies
 
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ### 3. Install Required Packages
 
 The project uses several additional packages that need to be installed:
 
-\`\`\`bash
+```bash
 # UI Components (shadcn/ui)
 npx shadcn@latest init
 npx shadcn@latest add button input card scroll-area select textarea
@@ -48,19 +48,19 @@ npm install lucide-react
 # Markdown Support
 npm install react-markdown remark-gfm react-syntax-highlighter
 npm install --save-dev @types/react-syntax-highlighter
-\`\`\`
+```
 
 ### 4. Run the Development Server
 
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
 ## Project Structure
 
-\`\`\`
+```
 ├── app/
 │   ├── chat/
 │   │   ├── page.tsx          # Chat interface
@@ -80,7 +80,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 ├── lib/
 │   └── utils.ts              # Utility functions
 └── README.md
-\`\`\`
+```
 
 ## Design Choices
 
@@ -96,17 +96,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 
 ## Available Scripts
 
-- \`npm run dev\` - Start development server
-- \`npm run build\` - Build for production
-- \`npm run start\` - Start production server
-- \`npm run lint\` - Run ESLint
-- \`npm run type-check\` - Run TypeScript compiler check
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run type-check` - Run TypeScript compiler check
 
 ## Development Guide
 
 ### Adding New Components
 
-1. Create components in the \`components/\` directory
+1. Create components in the `components/` directory
 2. Use TypeScript for type safety
 3. Follow the existing naming conventions (kebab-case for files)
 4. Import and use shadcn/ui components when possible
@@ -116,25 +116,25 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 - Use Tailwind CSS classes for styling
 - Follow the existing color scheme (grays with accent colors)
 - Maintain responsive design principles
-- Use the \`cn()\` utility function for conditional classes
+- Use the `cn()` utility function for conditional classes
 
 ### State Management
 
 The project uses React Context for state management:
 
-\`\`\`typescript
+```typescript
 import { useStringContext } from '@/contexts/string-context'
 
 function MyComponent() {
   const { value, setValue } = useStringContext()
   // Use the context...
 }
-\`\`\`
+```
 
 ### Adding New Pages
 
-1. Create a new directory in \`app/\`
-2. Add a \`page.tsx\` file
+1. Create a new directory in `app/`
+2. Add a `page.tsx` file
 3. Export a default React component
 4. The file will automatically become a route
 
@@ -150,15 +150,15 @@ Currently, the app uses simulated API calls. To integrate real APIs:
 
 ### 1. Build the Application
 
-\`\`\`bash
+```bash
 npm run build
-\`\`\`
+```
 
 ### 2. Test the Production Build
 
-\`\`\`bash
+```bash
 npm run start
-\`\`\`
+```
 
 ### 3. Optimize for Production
 
@@ -169,7 +169,7 @@ The build process automatically:
 - Creates service worker for caching
 
 #### Docker
-\`\`\`dockerfile
+```dockerfile
 FROM node:18-alpine
 WORKDIR /app
 COPY package*.json ./
@@ -178,8 +178,8 @@ COPY . .
 RUN npm run build
 EXPOSE 3000
 CMD ["npm", "start"]
-\`\`\`
+```
 
 ## Environment Variables
 
-Create a \`.env.local\` file for environment variables:
+Create a `.env.local` file for environment variables:
